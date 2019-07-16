@@ -19,9 +19,8 @@ node {
         usernamePassword(credentialsId: 'docker-credentials',
                          usernameVariable: 'USERNAME',
                          passwordVariable: 'PASSWORD')]) {
-      sh 'export DOCKER_CONTENT_TRUST=1'
       sh 'wget https://github.com/lukebond/microscanner-wrapper/raw/master/scan.sh -O /usr/local/bin/scan.sh && chmod +x /usr/local/bin/scan.sh'
-      sh '/usr/local/bin/scan.sh ${USERNAME}/demo-api:latest'
+      sh 'MICROSCANNER_OPTIONS=--continue-on-failure /usr/local/bin/scan.sh ${USERNAME}/demo-api:latest'
     }
   }
   
@@ -30,6 +29,7 @@ node {
         usernamePassword(credentialsId: 'docker-credentials',
                          usernameVariable: 'USERNAME',
                          passwordVariable: 'PASSWORD')]) {
+      sh 'export DOCKER_CONTENT_TRUST=1'
       sh 'docker login -p "${PASSWORD}" -u "${USERNAME}"'
       sh 'docker image push ${USERNAME}/demo-api:latest'
     }
