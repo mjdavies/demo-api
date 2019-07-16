@@ -11,17 +11,6 @@ node {
       sh 'docker image build -t ${USERNAME}/demo-api:latest .'
     }
   }
-  stage('Scan') {
-    withCredentials([
-        string(credentialsId: 'microscanner-token',
-               variable: 'MICROSCANNER-TOKEN'),
-        usernamePassword(credentialsId: 'docker-credentials',
-                         usernameVariable: 'USERNAME',
-                         passwordVariable: 'PASSWORD')]) {
-      sh 'wget https://github.com/lukebond/microscanner-wrapper/raw/master/scan.sh -O /usr/local/bin/scan.sh && chmod +x /usr/local/bin/scan.sh'
-      sh 'MICROSCANNER_OPTIONS=--continue-on-failure /usr/local/bin/scan.sh mjdavies/demo-api:latest'
-    }
-  }
   
   stage('Push') {
     withCredentials([
